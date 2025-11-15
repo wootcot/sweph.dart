@@ -66,9 +66,12 @@
 #if MSDOS
 #else
   #define _FILE_OFFSET_BITS 64
+  #define _LARGEFILE64_SOURCE
+  #define _POSIX_C_SOURCE 200112L
 #endif
 
 #include <string.h>
+#include <stdio.h>
 #include "swephexp.h"
 #include "sweph.h"
 #include "swejpl.h"
@@ -77,6 +80,12 @@
   typedef __int64 off_t64;
   #define FSEEK _fseeki64
   #define FTELL _ftelli64
+#elif defined(__ANDROID__)
+  // For Android with API 21+, fseek/ftell work with large files
+  // Using regular fseek/ftell to avoid NDK compatibility issues
+  typedef long off_t64;
+  #define FSEEK fseek
+  #define FTELL ftell
 #else
   typedef off_t off_t64;
   #define FSEEK fseeko

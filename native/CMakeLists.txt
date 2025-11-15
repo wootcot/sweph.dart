@@ -29,4 +29,9 @@ IF (WIN32)
   add_definitions(-DMAKE_DLL)
 ENDIF()
 
+# Enable large file support for fseeko/ftello on Android and other POSIX systems
+IF (ANDROID OR UNIX)
+  add_definitions(-D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64)
+ENDIF()
+
 target_compile_definitions(sweph PUBLIC DART_SHARED_LIB)
